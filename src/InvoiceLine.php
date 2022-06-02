@@ -2,8 +2,6 @@
 
 namespace Wechalet\TaxIdentifier;
 
-use Wechalet\TaxIdentifier\Types\InvoiceLineItemType;
-
 class InvoiceLine
 {
     protected ?string $title;
