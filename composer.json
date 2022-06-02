@@ -1,0 +1,21 @@
+{
+    "name": "wechalet/tax-identifier",
+    "type": "library",
+    "license": "MIT",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "Smail Aouissa",
+            "email": "aouissa.smail@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "spatie/enum": "^3.13"
+    },
+    "autoload": {
+        "psr-4": {
+            "Wechalet\\TaxIdentifier\\": "src/"
+        }
+    }
+}
