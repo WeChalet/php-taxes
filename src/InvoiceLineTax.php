@@ -5,8 +5,8 @@ namespace Wechalet\TaxIdentifier;
 class InvoiceLineTax extends InvoiceLine
 {
 
-    public function __construct(array $data)
+    public function __construct(string $title, float $price)
     {
-        parent::__construct($data);
+        parent::__construct($title, $price);
     }
 }

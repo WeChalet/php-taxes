@@ -9,12 +9,12 @@ class InvoiceLineItem extends InvoiceLine
     protected InvoiceLineItemType $type;
     protected ?int $quantity;
 
-    public function __construct(InvoiceLineItemType $type, array $data)
+    public function __construct(InvoiceLineItemType $type, string $title, float $price, int $quantity, ?string $measure)
     {
-        parent::__construct($data);
+        parent::__construct($title, $price, $measure);
 
         $this->type = $type;
-        $this->setQuantity($data['quantity'] ?? null);
+        $this->setQuantity($quantity ?? null);
     }
 
     public function getQuantity(): ?int

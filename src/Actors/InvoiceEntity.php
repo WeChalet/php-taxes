@@ -4,9 +4,9 @@ namespace Wechalet\TaxIdentifier\Actors;
 
 abstract class InvoiceEntity
 {
-    private string $name;
-    private string $address;
-    private string $phone;
+    protected string $name;
+    protected  string $address;
+    protected  string $phone;
 
     public function __construct(string $name, string $address, string $phone)
     {

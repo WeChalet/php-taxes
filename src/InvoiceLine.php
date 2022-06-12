@@ -8,11 +8,11 @@ class InvoiceLine
     protected ?float $price;
     protected ?string $measure;
 
-    public function __construct(array $data)
+    public function __construct(string $title, float $price, ?string $measure = null)
     {
-        $this->setTitle($data['title'] ?? null);
-        $this->setPrice($data['price'] ?? null);
-        $this->setMeasure($data['measure'] ?? null);
+        $this->title = $title ?? null;
+        $this->price = $price ?? null;
+        $this->measure = $measure ?? null;
     }
 
     public function getTitle(): string
@@ -20,28 +20,13 @@ class InvoiceLine
         return $this->title;
     }
 
-    public function setTitle($title): void
-    {
-        $this->title = $title;
-    }
-
     public function getPrice(): float
     {
         return $this->price;
     }
 
-    public function setPrice($price): void
-    {
-        $this->price = $price;
-    }
-
     public function getMeasure(): string
     {
         return $this->measure;
-    }
-
-    public function setMeasure($measure): void
-    {
-        $this->measure = $measure;
     }
 }

@@ -68,10 +68,10 @@ abstract class TaxIdentifier implements TaxInterface
             $taxAmount += $this->applyTax( $item->getTotal() );
         }
 
-        return new InvoiceLineTax([
-            'title' => $this->getName(),
-            'price' => $taxAmount,
-        ]);
+        return new InvoiceLineTax(
+            $this->getName(),
+            $taxAmount
+        );
     }
 
     /**

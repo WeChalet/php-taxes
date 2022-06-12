@@ -9,11 +9,6 @@ class Biller extends InvoiceEntity
     private string $entity = 'biller';
     private array $taxIdentifiers = [];
 
-    public function __construct(string $name, string $address, string $phone)
-    {
-        parent::__construct($name, $address, $phone);
-    }
-
     public function getEntity(): string
     {
         return $this->entity;
