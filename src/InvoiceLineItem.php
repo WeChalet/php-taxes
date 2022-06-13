@@ -7,14 +7,14 @@ use Wechalet\TaxIdentifier\Types\InvoiceLineItemType;
 class InvoiceLineItem extends InvoiceLine
 {
     protected InvoiceLineItemType $type;
-    protected ?int $quantity;
+    protected int $quantity = 1;
 
     public function __construct(InvoiceLineItemType $type, string $title, float $price, int $quantity, ?string $measure)
     {
         parent::__construct($title, $price, $measure);
 
         $this->type = $type;
-        $this->setQuantity($quantity ?? null);
+        $this->quantity = $quantity ?? null;
     }
 
     public function getQuantity(): ?int
@@ -22,19 +22,9 @@ class InvoiceLineItem extends InvoiceLine
         return $this->quantity;
     }
 
-    public function setQuantity(?int $quantity): void
-    {
-        $this->quantity = $quantity;
-    }
-
     public function getType(): InvoiceLineItemType
     {
         return $this->type;
-    }
-
-    public function setType(InvoiceLineItemType $type): void
-    {
-        $this->type = $type;
     }
 
     public function getTotal(): string

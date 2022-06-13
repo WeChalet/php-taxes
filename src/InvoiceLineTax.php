@@ -9,4 +9,9 @@ class InvoiceLineTax extends InvoiceLine
     {
         parent::__construct($title, $price);
     }
+
+    public function getTotal(): string
+    {
+        return $this->price;
+    }
 }
