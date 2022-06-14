@@ -1,6 +1,6 @@
 <?php
 
-namespace Wechalet\TaxIdentifier;
+namespace Wechalet\TaxIdentifier\Base;
 
 class InvoiceLine
 {

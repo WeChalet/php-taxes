@@ -5,8 +5,6 @@ namespace Wechalet\TaxIdentifier;
 use Wechalet\TaxIdentifier\Actors\Biller;
 use Wechalet\TaxIdentifier\Actors\Buyer;
 use Wechalet\TaxIdentifier\Actors\Seller;
-use Wechalet\TaxIdentifier\Discount\InvoiceLineNoneTaxDeductibleDiscount;
-use Wechalet\TaxIdentifier\Discount\InvoiceLineTaxDeductibleDiscount;
 
 class Bill
 {
@@ -16,10 +14,7 @@ class Bill
 
     public array $items = [];
     public array $taxes = [];
-    public array $deductible_discounts = [];
-    public array $none_deductible_discounts = [];
-
-    public function __construct(){}
+    public array $discounts = [];
 
     public function getSubTotal(): float
     {
@@ -28,10 +23,6 @@ class Bill
         foreach ($this->items as $item) {
             $subtotal += $item->getTotal();
         }
-
-        $subtotal -= array_reduce($this->deductible_discounts , function (float $acc,InvoiceLine $item){
-            return $acc + $item->getPrice();
-        }, 0.0);
 
         return $subtotal;
     }
@@ -46,24 +37,23 @@ class Bill
             $total += $tax->getPrice();
         }
 
-        // TODO check this
-        $total -= array_reduce($this->none_deductible_discounts , function (float $acc,InvoiceLine $item){
-            return $acc + $item->getPrice();
-        }, 0.0);
+        foreach ($this->buyer->getDiscountsIdentifiers() as $discountIdentifier) {
+            $discount = $discountIdentifier->applyTo($this);
+            $this->discounts[] = $discount;
+            \Log::info($discount->getPrice());
+            $total -= $discount->getPrice();
+        }
+
+//        $total -= array_reduce($this->none_deductible_discounts , function (float $acc,InvoiceLine $item){
+//            return $acc + $item->getPrice();
+//        }, 0.0);
 
         return $total;
     }
 
-    public function addItem(InvoiceLine $item)
+    public function addItem(InvoiceLineItem $item)
     {
-        if (is_a($item, InvoiceLineNoneTaxDeductibleDiscount::class))
-            $this->none_deductible_discounts[] = $item;
-
-        else if (is_a($item, InvoiceLineTaxDeductibleDiscount::class))
-            $this->deductible_discounts[] = $item;
-
-        else if (is_a($item, InvoiceLineItem::class))
-            $this->items[] = $item;
+        $this->items[] = $item;
     }
 
     /**
