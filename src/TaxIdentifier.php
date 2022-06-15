@@ -6,7 +6,9 @@ namespace Wechalet\TaxIdentifier;
 use Wechalet\TaxIdentifier\Base\Identifier;
 use Wechalet\TaxIdentifier\Base\InvoiceLine;
 use Wechalet\TaxIdentifier\Enum\TaxAggregationType;
+use Wechalet\TaxIdentifier\Enum\IdentifierType;
 use Wechalet\TaxIdentifier\Exception\InvalidTaxFormat;
+use Wechalet\TaxIdentifier\Exception\InvalidTaxType;
 use Wechalet\TaxIdentifier\Types\TaxExemptInvoiceLineItem;
 
 abstract class TaxIdentifier extends Identifier

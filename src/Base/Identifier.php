@@ -3,8 +3,7 @@
 namespace Wechalet\TaxIdentifier\Base;
 
 
-use Wechalet\TaxIdentifier\Enum\TaxType;
-use Wechalet\TaxIdentifier\Exception\InvalidTaxFormat;
+use Wechalet\TaxIdentifier\Enum\IdentifierType;
 use Wechalet\TaxIdentifier\Exception\InvalidTaxType;
 use Wechalet\TaxIdentifier\Interfaces\TaxInterface;
 
@@ -29,14 +28,14 @@ abstract class Identifier implements TaxInterface
      */
     protected function apply(float $amount): float
     {
-        if(empty($this->getRate()) && $this->type == TaxType::TAX_TYPE_RATIO)
+        if(empty($this->getRate()) && $this->type == IdentifierType::TYPE_RATIO)
             return 0;
 
         switch ($this->type)
         {
-            case TaxType::TAX_TYPE_FIXED:
-                return $amount + $this->getRate();
-            case TaxType::TAX_TYPE_RATIO:
+            case IdentifierType::TYPE_FIXED:
+                return $this->getRate();
+            case IdentifierType::TYPE_RATIO:
                 return $amount * $this->getRate() / 100;
             default:
                 throw new InvalidTaxType();

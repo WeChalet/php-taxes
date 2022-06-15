@@ -14,19 +14,17 @@ abstract class DiscountIdentifier extends Identifier
 
     public function applyTo(Bill $bill): InvoiceLine
     {
-        $discountAmount = 0;
+        $total = 0.0;
 
         foreach ($bill->items as $item)
         {
-            if ($this->deductible && !in_array($item->getTitle() ,$this->deductible))
+            if (!empty($this->deductible) && !in_array($item->getTitle() ,$this->deductible))
                 continue;
 
-            $item->addDiscount(
-                $discount = $this->apply( $item->getTotal() )
-            );
-
-            $discountAmount += $discount;
+            $total += $item->getTotal() + ( !$this->is(DiscountType::NONE_TAX_DEDUCTIBLE) ? $item->getTax() : 0.0);
         }
+
+        $discountAmount = $this->apply($total);
 
         return new InvoiceLineDiscount(
             $this->getName(),
@@ -34,9 +32,12 @@ abstract class DiscountIdentifier extends Identifier
         );
     }
 
-    public function applyOn(?Array $items = null): self
+    public function applyOn($data = null): self
     {
-        $this->deductible = $items;
+        if (is_array($data))
+            $this->deductible = array_merge($this->deductible, $data);
+        else
+            $this->deductible[] = $data;
 
         return $this;
     }
@@ -53,5 +54,10 @@ abstract class DiscountIdentifier extends Identifier
         $this->discount_type = DiscountType::TAX_DEDUCTIBLE;
 
         return $this;
+    }
+
+    public function is($type): bool
+    {
+        return $this->discount_type === $type;
     }
 }

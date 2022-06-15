@@ -40,13 +40,8 @@ class Bill
         foreach ($this->buyer->getDiscountsIdentifiers() as $discountIdentifier) {
             $discount = $discountIdentifier->applyTo($this);
             $this->discounts[] = $discount;
-            \Log::info($discount->getPrice());
             $total -= $discount->getPrice();
         }
-
-//        $total -= array_reduce($this->none_deductible_discounts , function (float $acc,InvoiceLine $item){
-//            return $acc + $item->getPrice();
-//        }, 0.0);
 
         return $total;
     }
