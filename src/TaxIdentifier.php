@@ -6,9 +6,7 @@ namespace Wechalet\TaxIdentifier;
 use Wechalet\TaxIdentifier\Base\Identifier;
 use Wechalet\TaxIdentifier\Base\InvoiceLine;
 use Wechalet\TaxIdentifier\Enum\TaxAggregationType;
-use Wechalet\TaxIdentifier\Enum\IdentifierType;
 use Wechalet\TaxIdentifier\Exception\InvalidTaxFormat;
-use Wechalet\TaxIdentifier\Exception\InvalidTaxType;
 use Wechalet\TaxIdentifier\Types\TaxExemptInvoiceLineItem;
 
 abstract class TaxIdentifier extends Identifier
@@ -43,6 +41,9 @@ abstract class TaxIdentifier extends Identifier
                 if (is_a($item->getType(), TaxExemptInvoiceLineItem::class)) {
                     continue;
                 }
+
+                if (!empty($this->applied) && !in_array($item->getTitle() , $this->applied))
+                    continue;
 
                 $item->addTax(
                     $tax = $this->apply( $item->getTotal() )

@@ -9,7 +9,6 @@ use Wechalet\TaxIdentifier\Enum\DiscountType;
 
 abstract class DiscountIdentifier extends Identifier
 {
-    protected ?array $deductible = [];
     protected string $discount_type = DiscountType::TAX_DEDUCTIBLE;
 
     public function applyTo(Bill $bill): InvoiceLine
@@ -18,7 +17,7 @@ abstract class DiscountIdentifier extends Identifier
 
         foreach ($bill->items as $item)
         {
-            if (!empty($this->deductible) && !in_array($item->getTitle() ,$this->deductible))
+            if (!empty($this->applied) && !in_array($item->getTitle() ,$this->applied))
                 continue;
 
             $total += $item->getTotal() + ( !$this->is(DiscountType::NONE_TAX_DEDUCTIBLE) ? $item->getTax() : 0.0);
@@ -30,16 +29,6 @@ abstract class DiscountIdentifier extends Identifier
             $this->getName(),
             $discountAmount
         );
-    }
-
-    public function applyOn($data = null): self
-    {
-        if (is_array($data))
-            $this->deductible = array_merge($this->deductible, $data);
-        else
-            $this->deductible[] = $data;
-
-        return $this;
     }
 
     public function setNoneTaxDeductibleDiscount(): self

@@ -9,6 +9,7 @@ use Wechalet\TaxIdentifier\Interfaces\TaxInterface;
 
 abstract class Identifier implements TaxInterface
 {
+    protected ?array $applied = [];
     protected string $name;
     protected float $rate = 0.0;
     protected string $type;
@@ -40,5 +41,15 @@ abstract class Identifier implements TaxInterface
             default:
                 throw new InvalidTaxType();
         }
+    }
+
+    public function applyOn($data = null): self
+    {
+        if (is_array($data))
+            $this->applied = array_merge($this->applied, $data);
+        else
+            $this->applied[] = $data;
+
+        return $this;
     }
 }
