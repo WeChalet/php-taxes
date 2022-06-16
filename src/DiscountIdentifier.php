@@ -6,10 +6,21 @@ namespace Wechalet\TaxIdentifier;
 use Wechalet\TaxIdentifier\Base\Identifier;
 use Wechalet\TaxIdentifier\Base\InvoiceLine;
 use Wechalet\TaxIdentifier\Enum\DiscountType;
+use Wechalet\TaxIdentifier\Exception\InvalidTaxRate;
+use Wechalet\TaxIdentifier\Interfaces\DiscountInterface;
 
-abstract class DiscountIdentifier extends Identifier
+abstract class DiscountIdentifier extends Identifier implements DiscountInterface
 {
     protected string $discount_type = DiscountType::TAX_DEDUCTIBLE;
+    
+    public function __construct(?float $rate = null, ?string $type = null)
+    {
+        $this->rate = !empty($rate) ? $rate : $this->rate;
+        $this->type = !empty($type) ? $type : $this->type;
+
+        if (empty($rate))
+            throw new InvalidTaxRate();
+    }
 
     public function applyTo(Bill $bill): InvoiceLine
     {

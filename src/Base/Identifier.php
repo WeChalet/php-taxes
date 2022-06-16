@@ -5,9 +5,8 @@ namespace Wechalet\TaxIdentifier\Base;
 
 use Wechalet\TaxIdentifier\Enum\IdentifierType;
 use Wechalet\TaxIdentifier\Exception\InvalidTaxType;
-use Wechalet\TaxIdentifier\Interfaces\TaxInterface;
 
-abstract class Identifier implements TaxInterface
+abstract class Identifier
 {
     protected ?array $applied = [];
     protected string $name;

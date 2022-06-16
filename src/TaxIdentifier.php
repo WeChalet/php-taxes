@@ -7,9 +7,10 @@ use Wechalet\TaxIdentifier\Base\Identifier;
 use Wechalet\TaxIdentifier\Base\InvoiceLine;
 use Wechalet\TaxIdentifier\Enum\TaxAggregationType;
 use Wechalet\TaxIdentifier\Exception\InvalidTaxFormat;
+use Wechalet\TaxIdentifier\Interfaces\TaxInterface;
 use Wechalet\TaxIdentifier\Types\TaxExemptInvoiceLineItem;
 
-abstract class TaxIdentifier extends Identifier
+abstract class TaxIdentifier extends Identifier implements TaxInterface
 {
     protected string $id;
     protected string $aggregation_type = TaxAggregationType::TAX_AGGREGATION_SUBTOTAL;
