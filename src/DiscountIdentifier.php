@@ -6,6 +6,7 @@ namespace Wechalet\TaxIdentifier;
 use Wechalet\TaxIdentifier\Base\Identifier;
 use Wechalet\TaxIdentifier\Base\InvoiceLine;
 use Wechalet\TaxIdentifier\Enum\DiscountType;
+use Wechalet\TaxIdentifier\Enum\IdentifierType;
 use Wechalet\TaxIdentifier\Exception\InvalidTaxRate;
 use Wechalet\TaxIdentifier\Interfaces\DiscountInterface;
 
@@ -24,21 +25,30 @@ abstract class DiscountIdentifier extends Identifier implements DiscountInterfac
 
     public function applyTo(Bill $bill): InvoiceLine
     {
-        $total = 0.0;
+        $total_discount = 0.0;
 
         foreach ($bill->items as $item)
         {
             if (!empty($this->applied) && !in_array($item->getTitle() ,$this->applied))
                 continue;
 
-            $total += $item->getTotal() + ( !$this->is(DiscountType::NONE_TAX_DEDUCTIBLE) ? $item->getTax() : 0.0);
-        }
+            // get total of item
+            $item_total = $item->getTotal() + ( !$this->is(DiscountType::NONE_TAX_DEDUCTIBLE) ? $item->getTax() : 0.0);
 
-        $discountAmount = $this->apply($total);
+            $amount = $this->apply($item_total);
+
+            if( $this->type != IdentifierType::TYPE_FIXED || $total_discount < $this->getRate() )
+                $total_discount += $amount;
+
+            $item->addDsicount([
+                'name' => $this->getName(),
+                'amount' => $amount
+            ]);
+        }
 
         return new InvoiceLineDiscount(
             $this->getName(),
-            $discountAmount
+            $total_discount
         );
     }
 

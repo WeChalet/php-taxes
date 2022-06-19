@@ -34,7 +34,7 @@ abstract class Identifier
         switch ($this->type)
         {
             case IdentifierType::TYPE_FIXED:
-                return $this->getRate();
+                return $amount - $this->getRate() >= 0 ? $this->getRate() : $amount;
             case IdentifierType::TYPE_RATIO:
                 return $amount * $this->getRate() / 100;
             default:

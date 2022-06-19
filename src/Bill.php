@@ -98,4 +98,9 @@ class Bill
     {
         $this->biller = $biller;
     }
+
+    public function toArray(): array
+    {
+        return [];
+    }
 }

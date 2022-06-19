@@ -7,7 +7,10 @@ class InvoiceLine
     protected ?string $title;
     protected ?float $price = 0.0;
     protected ?string $measure = "CAD";
-    protected float $taxAmount = 0.0;
+    // tax
+    protected array $taxes = [];
+    // discount
+    protected array $discounts = [];
 
     public function __construct(string $title, float $price, ?string $measure = null)
     {
@@ -31,13 +34,23 @@ class InvoiceLine
         return $this->measure;
     }
 
-    public function addTax($taxAmount): void
+    public function addTax($tax): void
     {
-        $this->taxAmount += $taxAmount;
+        $this->taxes[] = $tax;
     }
 
     public function getTax(): float
     {
-        return $this->taxAmount;
+        return array_sum( array_column($this->taxes, 'amount') );
+    }
+
+    public function addDiscount($discount): void
+    {
+        $this->discounts[] = $discount;
+    }
+
+    public function getDiscount(): float
+    {
+        return array_sum( array_column($this->discounts, 'amount') );
     }
 }
