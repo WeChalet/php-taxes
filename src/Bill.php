@@ -106,6 +106,7 @@ class Bill
         return [
             'sub_total' => $this->getSubTotal(),
             'total' => $this->getTotal(),
+            // items
             'items' => array_map(function (InvoiceLineItem $item) {
                 return [
                     "title"=> $item->getTitle(),
@@ -119,7 +120,22 @@ class Bill
                     "discounts"=> $item->getDiscounts(),
                     "taxes"=> $item->getTaxes(),
                 ];
-            }, $this->items)
+
+            }, $this->items),
+
+            'taxes' => array_map(function (InvoiceLineTax $tax) {
+                return $tax->getTaxIdentifier()->toArray() + [
+                    "price"=> $tax->getTotal()
+                ];
+
+            }, $this->taxes),
+
+            'discounts' => array_map(function (InvoiceLineDiscount $discount) {
+                return $discount->getDiscountIdentifier()->toArray() + [
+                        "price"=> $discount->getTotal()
+                    ];
+
+            }, $this->discounts)
         ];
     }
 }

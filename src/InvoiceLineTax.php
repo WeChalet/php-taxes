@@ -6,14 +6,22 @@ use Wechalet\TaxIdentifier\Base\InvoiceLine;
 
 class InvoiceLineTax extends InvoiceLine
 {
+    protected TaxIdentifier $taxIdentifier;
 
-    public function __construct(string $title, float $price)
+    public function __construct(TaxIdentifier $taxIdentifier, float $price )
     {
-        parent::__construct($title, $price);
+        parent::__construct($taxIdentifier->getName(), $price);
+
+        $this->taxIdentifier = $taxIdentifier;
     }
 
     public function getTotal(): string
     {
         return $this->price;
+    }
+
+    public function getTaxIdentifier(): TaxIdentifier
+    {
+        return $this->taxIdentifier;
     }
 }

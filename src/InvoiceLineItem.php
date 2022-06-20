@@ -4,7 +4,6 @@ namespace Wechalet\TaxIdentifier;
 
 use Wechalet\TaxIdentifier\Base\InvoiceLine;
 use Wechalet\TaxIdentifier\Types\InvoiceLineItemType;
-use Wechalet\TaxIdentifier\Types\TaxableInvoiceLineItem;
 
 class InvoiceLineItem extends InvoiceLine
 {

@@ -44,7 +44,7 @@ abstract class TaxIdentifier extends Identifier implements TaxInterface
         }
 
         return new InvoiceLineTax(
-            $this->getName(),
+            $this,
             $taxAmount
         );
     }

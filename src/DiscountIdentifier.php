@@ -51,7 +51,7 @@ abstract class DiscountIdentifier extends Identifier implements DiscountInterfac
         }
 
         return new InvoiceLineDiscount(
-            $this->getName(),
+            $this,
             $total_discount
         );
     }
