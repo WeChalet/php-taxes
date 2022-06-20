@@ -46,10 +46,15 @@ abstract class TaxIdentifier extends Identifier implements TaxInterface
                 if (!empty($this->applied) && !in_array($item->getTitle() , $this->applied))
                     continue;
 
-                $item->addDsicount([
-                    'name' => $this->getName(),
-                    'amount' => $tax = $this->apply( $item->getTotal() )
-                ]);
+                $item->addTax(
+                    array_merge(
+                        $this->toArray(),
+                        [
+                            'price' => $tax = $this->apply( $item->getTotal() )
+                        ]
+                    )
+                );
+
 
                 $taxAmount += $tax;
             }

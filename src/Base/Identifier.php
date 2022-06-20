@@ -51,4 +51,13 @@ abstract class Identifier
 
         return $this;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'name' => $this->name,
+            'rate' => $this->rate,
+            'type' => $this->type,
+        ];
+    }
 }

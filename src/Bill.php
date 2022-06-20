@@ -24,7 +24,7 @@ class Bill
             $subtotal += $item->getTotal();
         }
 
-        return $subtotal;
+        return round($subtotal, 2);
     }
 
     public function getTotal(): float
@@ -43,7 +43,7 @@ class Bill
             $total -= $discount->getPrice();
         }
 
-        return $total;
+        return round($total, 2);
     }
 
     public function addItem(InvoiceLineItem $item)
@@ -101,6 +101,25 @@ class Bill
 
     public function toArray(): array
     {
-        return [];
+        ;
+
+        return [
+            'sub_total' => $this->getSubTotal(),
+            'total' => $this->getTotal(),
+            'items' => array_map(function (InvoiceLineItem $item) {
+                return [
+                    "title"=> $item->getTitle(),
+                    "price"=> $item->getPrice(),
+                    "quantity"=> $item->getQuantity(),
+                    "measure"=> $item->getMeasure(),
+                    "type"=> $item->getType()->getClassName(),
+                    "total"=> $item->getQuantity() * $item->getPrice(),
+                    "discount_total"=> $item->getDiscount(),
+                    "taxAmount"=> $item->getTax(),
+                    "discounts"=> $item->getDiscounts(),
+                    "taxes"=> $item->getTaxes(),
+                ];
+            }, $this->items)
+        ];
     }
 }

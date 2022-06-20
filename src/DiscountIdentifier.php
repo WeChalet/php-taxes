@@ -40,10 +40,14 @@ abstract class DiscountIdentifier extends Identifier implements DiscountInterfac
             if( $this->type != IdentifierType::TYPE_FIXED || $total_discount < $this->getRate() )
                 $total_discount += $amount;
 
-            $item->addDsicount([
-                'name' => $this->getName(),
-                'amount' => $amount
-            ]);
+            $item->addDiscount(
+                array_merge(
+                    $this->toArray(),
+                    [
+                        'price' => $amount
+                    ]
+                )
+            );
         }
 
         return new InvoiceLineDiscount(
