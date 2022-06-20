@@ -39,24 +39,7 @@ abstract class TaxIdentifier extends Identifier implements TaxInterface
         {
             foreach ($collection as $item)
             {
-                if (is_a($item->getType(), TaxExemptInvoiceLineItem::class)) {
-                    continue;
-                }
-
-                if (!empty($this->applied) && !in_array($item->getTitle() , $this->applied))
-                    continue;
-
-                $item->addTax(
-                    array_merge(
-                        $this->toArray(),
-                        [
-                            'price' => $tax = $this->apply( $item->getTotal() )
-                        ]
-                    )
-                );
-
-
-                $taxAmount += $tax;
+                $taxAmount += $this->applyLine($item);
             }
         }
 
@@ -64,5 +47,26 @@ abstract class TaxIdentifier extends Identifier implements TaxInterface
             $this->getName(),
             $taxAmount
         );
+    }
+
+    public function applyLine(InvoiceLine $item): float
+    {
+        if (is_a($item->getType(), TaxExemptInvoiceLineItem::class)) {
+            return 0;
+        }
+
+        if (!empty($this->applied) && !in_array($item->getTitle() , $this->applied))
+            return  0;
+
+        $item->addTax(
+            array_merge(
+                $this->toArray(),
+                [
+                    'price' => $tax = $this->apply( $item->getTotal() )
+                ]
+            )
+        );
+
+        return $tax;
     }
 }
