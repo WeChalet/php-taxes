@@ -101,41 +101,43 @@ class Bill
 
     public function toArray(): array
     {
-        ;
-
         return [
             'sub_total' => $this->getSubTotal(),
             'total' => $this->getTotal(),
             // items
-            'items' => array_map(function (InvoiceLineItem $item) {
-                return [
-                    "title"=> $item->getTitle(),
+            'items' => array_reduce($this->items, function (array $acc, InvoiceLineItem $item) {
+                $acc [$item->getTitle()] = [
+                    "label"=> $item->getTitle(),
                     "price"=> $item->getPrice(),
                     "quantity"=> $item->getQuantity(),
                     "measure"=> $item->getMeasure(),
                     "type"=> $item->getType()->getClassName(),
-                    "total"=> $item->getQuantity() * $item->getPrice(),
+                    "sub_total"=> $item->getQuantity() * $item->getPrice(),
+                    "total"=> ($item->getQuantity() * $item->getPrice()) + ($item->getTax() - $item->getDiscount()),
                     "discount_total"=> $item->getDiscount(),
                     "taxAmount"=> $item->getTax(),
                     "discounts"=> $item->getDiscounts(),
                     "taxes"=> $item->getTaxes(),
                 ];
 
-            }, $this->items),
+                return $acc;
+            }, []),
 
-            'taxes' => array_map(function (InvoiceLineTax $tax) {
-                return $tax->getTaxIdentifier()->toArray() + [
+            'taxes' => array_reduce($this->taxes, function (array $acc, InvoiceLineTax $tax) {
+                $acc[$tax->getTitle()] = $tax->getTaxIdentifier()->toArray() + [
                     "price"=> $tax->getTotal()
                 ];
 
-            }, $this->taxes),
+                return $acc;
+            }, []),
 
-            'discounts' => array_map(function (InvoiceLineDiscount $discount) {
-                return $discount->getDiscountIdentifier()->toArray() + [
+            'discounts' => array_reduce($this->discounts, function (array $acc, InvoiceLineDiscount $discount) {
+                $acc[$discount->getTitle()] = $discount->getDiscountIdentifier()->toArray() + [
                         "price"=> $discount->getTotal()
                     ];
 
-            }, $this->discounts)
+                return $acc;
+            }, [])
         ];
     }
 }
