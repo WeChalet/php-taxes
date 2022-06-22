@@ -19,7 +19,7 @@ abstract class DiscountIdentifier extends Identifier implements DiscountInterfac
         $this->rate = !empty($rate) ? $rate : $this->rate;
         $this->type = !empty($type) ? $type : $this->type;
 
-        if (empty($rate))
+        if (empty($this->rate))
             throw new InvalidTaxRate();
     }
 
@@ -36,6 +36,8 @@ abstract class DiscountIdentifier extends Identifier implements DiscountInterfac
             $item_total = $item->getTotal() + ( !$this->is(DiscountType::NONE_TAX_DEDUCTIBLE) ? $item->getTax() : 0.0);
 
             $amount = $this->apply($item_total);
+
+            $amount = round($amount, 2);
 
             if( $this->type != IdentifierType::TYPE_FIXED || $total_discount < $this->getRate() )
                 $total_discount += $amount;

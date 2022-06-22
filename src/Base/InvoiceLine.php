@@ -41,7 +41,8 @@ class InvoiceLine
 
     public function getTax(): float
     {
-        return array_sum( array_column($this->taxes, 'price') );
+        $tax = array_sum( array_column($this->taxes, 'price') );
+        return round($tax, 2);
     }
 
     public function getTaxes(?string $key = null): array
@@ -60,7 +61,8 @@ class InvoiceLine
 
     public function getDiscount(): float
     {
-        return array_sum( array_column($this->discounts, 'price') );
+        $discount = array_sum( array_column($this->discounts, 'price') );
+        return round($discount, 2);
     }
 
     public function getDiscounts(?string $key = null): array
