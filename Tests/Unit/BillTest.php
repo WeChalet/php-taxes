@@ -7,7 +7,10 @@ use Resource\Discounts\DiscountFirst;
 use Resource\Discounts\DiscountSecond;
 use Resource\Discounts\DiscountThird;
 use Resource\Taxes\TaxFirst;
+use Tests\Resource\Taxes\TaxFifth;
+use Tests\Resource\Taxes\TaxForth;
 use Tests\Resource\Taxes\TaxSecond;
+use Tests\Resource\Taxes\TaxSixth;
 use Tests\Resource\Taxes\TaxThird;
 use Wechalet\TaxIdentifier\Actors\Biller;
 use Wechalet\TaxIdentifier\Actors\Buyer;
@@ -960,7 +963,7 @@ class BillTest extends TestCase
     {
         $bill = new bill();
 
-        $this->tax_2->setTaxAggregated();
+        $this->tax_1->setTaxAggregated();
         // add taxes
         $this->biller->addTaxIdentifier($this->tax_1);
         $this->biller->addTaxIdentifier($this->tax_2);
@@ -1040,4 +1043,104 @@ class BillTest extends TestCase
             ]
         );
     }
+
+    /**
+     * @test
+     */
+//    public function shouldCalculateTotalWithTaxedFixedTotalSecond()
+//    {
+//        $bill = new bill();
+//
+//        $this->tax_2->setTaxAggregated();
+//        // add taxes
+//        $tax_1 = new TaxForth('3');
+//        $tax_2 = new TaxFifth('2');
+//        $tax_3 = new TaxSixth('1');
+//
+//        $this->biller->addTaxIdentifier($tax_1);
+//        $this->biller->addTaxIdentifier($tax_2);
+//        $this->biller->addTaxIdentifier($tax_3);
+//
+//        // add bill resources
+//        $bill->setBuyer($this->buyer);
+//        $bill->setSeller($this->seller);
+//        $bill->setBiller($this->biller);
+//
+//        // add items to bill
+//        $item = new InvoiceLineItem(
+//            new TaxableInvoiceLineItem(),
+//            'Item 1',
+//            170,
+//            4,
+//            "CAD"
+//        );
+//
+//        $bill->addItem($item);
+//
+//        // get all bill items (result)
+//        $items = $bill->toArray();
+//
+//        $this->assertEquals(
+//            $items,
+//            [
+//                'sub_total' => 680.0,
+//                'total' => 812.7,
+//                "items" => [
+//                    "Item 1" => [
+//                        "label" => "Item 1",
+//                        "price" => 170.0,
+//                        "quantity" => 4,
+//                        "measure" => "CAD",
+//                        "type" => "TaxableInvoiceLineItem",
+//                        "sub_total" => 680,
+//                        "total" => 569.52,
+//                        "discount_total" => 0.0,
+//                        "taxAmount" => 249.52,
+//                        "discounts" => [],
+//                        "taxes" => [
+//                            [
+//                                "name" => "QTLT",
+//                                "rate" => 3.5,
+//                                "type" => "RATIO",
+//                                "price" => 23.8,
+//                            ],
+//                            [
+//                                "name" => "GST",
+//                                "rate" => 5,
+//                                "type" => "RATIO",
+//                                "price" => 35.19,
+//                            ],
+//                            [
+//                                "name" => "QST",
+//                                "rate" => 9.975,
+//                                "type" => "RATIO",
+//                                "price" => 70.20,
+//                            ],
+//                        ]
+//                    ],
+//                ],
+//                "taxes" => [
+//                    "QTLT" => [
+//                        "name" => "QTLT",
+//                        "rate" => 3.5,
+//                        "type" => "RATIO",
+//                        "price" => 23.8,
+//                    ],
+//                    "Tax 2" => [
+//                        "name" => "GST",
+//                        "rate" => 5,
+//                        "type" => "RATIO",
+//                        "price" => 35.19,
+//                    ],
+//                    "Tax 3" => [
+//                        "name" => "QST",
+//                        "rate" => 9.975,
+//                        "type" => "RATIO",
+//                        "price" => 70.20,
+//                    ],
+//                ],
+//                "discounts" => []
+//            ]
+//        );
+//    }
 }

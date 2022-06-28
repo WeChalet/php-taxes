@@ -29,10 +29,13 @@ abstract class TaxIdentifier extends Identifier implements TaxInterface
     {
         $taxAmount = 0;
 
-        $available_tax_amount = $this->aggregation_type == TaxAggregationType::TAX_AGGREGATION_SUBTOTAL ? 0 :
-            array_reduce($bill->taxes,function ($acc, InvoiceLineTax $item){
-                return $acc + $item->getTotal();
-            }, 0);
+        $filtered_taxes = array_filter($bill->taxes, function (InvoiceLineTax $tax){
+                return $tax->getTaxIdentifier()->is(TaxAggregationType::TAX_AGGREGATION_TAXED_TOTAL);
+            });
+
+        $available_tax_amount = array_reduce($filtered_taxes,function ($acc, InvoiceLineTax $item){
+            return $acc + $item->getTotal();
+        }, 0);
 
         foreach ($bill->items as $item)
         {
@@ -77,5 +80,10 @@ abstract class TaxIdentifier extends Identifier implements TaxInterface
     public function setTaxAggregated(): void
     {
         $this->aggregation_type = TaxAggregationType::TAX_AGGREGATION_TAXED_TOTAL;
+    }
+
+    public function is(string $aggregation_type): bool
+    {
+        return $this->aggregation_type == $aggregation_type;
     }
 }
