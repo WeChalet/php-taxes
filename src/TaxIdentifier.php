@@ -29,18 +29,14 @@ abstract class TaxIdentifier extends Identifier implements TaxInterface
     {
         $taxAmount = 0;
 
-        $collections = [
-            $bill->items,
-            // check if this tax is applied on items only (not old added taxes)
-            $this->aggregation_type == TaxAggregationType::TAX_AGGREGATION_SUBTOTAL ? [] : $bill->taxes
-        ];
+        $available_tax_amount = $this->aggregation_type == TaxAggregationType::TAX_AGGREGATION_SUBTOTAL ? 0 :
+            array_reduce($bill->taxes,function ($acc, InvoiceLineTax $item){
+                return $acc + $item->getTotal();
+            }, 0);
 
-        foreach ($collections as $collection)
+        foreach ($bill->items as $item)
         {
-            foreach ($collection as $item)
-            {
-                $taxAmount += $this->applyLine($item);
-            }
+            $taxAmount += $this->applyLine($item, $available_tax_amount);
         }
 
         return new InvoiceLineTax(
@@ -49,26 +45,37 @@ abstract class TaxIdentifier extends Identifier implements TaxInterface
         );
     }
 
-    public function applyLine(InvoiceLine $item): float
+    public function applyLine(InvoiceLine $item, $tax = 0): float
     {
-        if ($item instanceof InvoiceLineItem && is_a($item->getType(), TaxExemptInvoiceLineItem::class)) {
+        if (is_a($item,InvoiceLineItem::class) && is_a($item->getType(), TaxExemptInvoiceLineItem::class)) {
             return 0;
         }
 
-        if (!empty($this->applied) && !in_array($item->getTitle() , $this->applied))
+        if (is_a($item,InvoiceLineItem::class)  && !empty($this->applied) && !in_array($item->getTitle() , $this->applied))
             return  0;
 
-        $tax = $this->apply( $item->getTotal() );
+        $tax = $this->apply( $item->getTotal() + $tax );
 
         $item->addTax(
             array_merge(
                 $this->toArray(),
                 [
-                    'price' => $tax = round($tax,2)
+                    'price' => $tax = round($tax,2),
+                    //'tax_on' => $item->getTitle()
                 ]
             )
         );
 
         return $tax;
+    }
+
+    public function setTaxNotAggregated(): void
+    {
+        $this->aggregation_type = TaxAggregationType::TAX_AGGREGATION_SUBTOTAL;
+    }
+
+    public function setTaxAggregated(): void
+    {
+        $this->aggregation_type = TaxAggregationType::TAX_AGGREGATION_TAXED_TOTAL;
     }
 }

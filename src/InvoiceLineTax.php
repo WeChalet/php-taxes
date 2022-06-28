@@ -15,7 +15,7 @@ class InvoiceLineTax extends InvoiceLine
         $this->taxIdentifier = $taxIdentifier;
     }
 
-    public function getTotal(): string
+    public function getTotal(): float
     {
         return round($this->price, 2);
     }

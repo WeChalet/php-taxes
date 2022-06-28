@@ -952,4 +952,92 @@ class BillTest extends TestCase
             ]
         );
     }
+
+    /**
+     * @test
+     */
+    public function shouldCalculateTotalWithTaxedFixedTotal()
+    {
+        $bill = new bill();
+
+        $this->tax_2->setTaxAggregated();
+        // add taxes
+        $this->biller->addTaxIdentifier($this->tax_1);
+        $this->biller->addTaxIdentifier($this->tax_2);
+        $this->biller->addTaxIdentifier($this->tax_3);
+
+        // add bill resources
+        $bill->setBuyer($this->buyer);
+        $bill->setSeller($this->seller);
+        $bill->setBiller($this->biller);
+
+        // add items to bill
+        $bill->addItem($this->item_1);
+
+        // get all bill items (result)
+        $items = $bill->toArray();
+
+        $this->assertEquals(
+            $items,
+            [
+                "sub_total" => 320.0,
+                "total" => 569.52,
+                "items" => [
+                    "Pizza hut margherita 8 slices" => [
+                        "label" => "Pizza hut margherita 8 slices",
+                        "price" => 80.0,
+                        "quantity" => 4,
+                        "measure" => "CAD",
+                        "type" => "TaxableInvoiceLineItem",
+                        "sub_total" => 320.0,
+                        "total" => 569.52,
+                        "discount_total" => 0.0,
+                        "taxAmount" => 249.52,
+                        "discounts" => [],
+                        "taxes" => [
+                            [
+                                "name" => "Tax 1",
+                                "rate" => 5.0,
+                                "type" => "RATIO",
+                                "price" => 16.0,
+                            ],
+                            [
+                                "name" => "Tax 2",
+                                "rate" => 9.975,
+                                "type" => "RATIO",
+                                "price" => 33.52,
+                            ],
+                            [
+                                "name" => "Tax 3",
+                                "rate" => 200.0,
+                                "type" => "FIXED",
+                                "price" => 200.0,
+                            ],
+                        ]
+                    ],
+                ],
+                "taxes" => [
+                    "Tax 1" => [
+                        "name" => "Tax 1",
+                        "rate" => 5.0,
+                        "type" => "RATIO",
+                        "price" => 16.0,
+                    ],
+                    "Tax 2" => [
+                        "name" => "Tax 2",
+                        "rate" => 9.975,
+                        "type" => "RATIO",
+                        "price" => 33.52,
+                    ],
+                    "Tax 3" => [
+                        "name" => "Tax 3",
+                        "rate" => 200.0,
+                        "type" => "FIXED",
+                        "price" => 200,
+                    ],
+                ],
+                "discounts" => []
+            ]
+        );
+    }
 }
