@@ -63,10 +63,6 @@ abstract class TaxIdentifier extends Identifier implements TaxInterface
 
         $tax = $this->apply( $item->getTotal() + $tax );
 
-        ray(
-            $tax
-        );
-
         $item->addTax(
             array_merge(
                 $this->toArray(),
