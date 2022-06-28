@@ -51,7 +51,7 @@ abstract class TaxIdentifier extends Identifier implements TaxInterface
 
     public function applyLine(InvoiceLine $item): float
     {
-        if (is_a($item->getType(), TaxExemptInvoiceLineItem::class)) {
+        if ($item instanceof InvoiceLineItem && is_a($item->getType(), TaxExemptInvoiceLineItem::class)) {
             return 0;
         }
 
