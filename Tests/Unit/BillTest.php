@@ -1083,7 +1083,7 @@ class BillTest extends TestCase
         );
 
         $Bill->addItem($item);
-        //$Bill->addItem($item_2);
+        $Bill->addItem($item_2);
 
         // get all Bill items (result)
         $items = $Bill->toArray();
@@ -1091,8 +1091,8 @@ class BillTest extends TestCase
         $this->assertEquals(
             $items,
             [
-                'sub_total' => 680.0,
-                'total' => 809.19,
+                'sub_total' => 800.0,
+                'total' => 951.99,
                 "items" => [
                     "Item 1" => [
                         "label" => "Item 1",
@@ -1126,26 +1126,201 @@ class BillTest extends TestCase
                             ],
                         ]
                     ],
+                    "Item 2" => [
+                        "label" => "Item 2",
+                        "price" => 60.0,
+                        "quantity" => 2,
+                        "measure" => "CAD",
+                        "type" => "TaxableInvoiceLineItem",
+                        "sub_total" => 120.0,
+                        'total' => 142.8,
+                        'discount_total' => 0.0,
+                        'taxAmount' => 22.8,
+                        "discounts" => [],
+                        "taxes" => [
+                            [
+                                'name' => 'QTLT',
+                                'rate' => 3.5,
+                                'type' => 'RATIO',
+                                'price' => 4.2,
+                            ],
+                            [
+                                'name' => 'GST',
+                                'rate' => 5.0,
+                                'type' => 'RATIO',
+                                'price' => 6.21,
+                            ],
+                            [
+                                'name' => 'QST',
+                                'rate' => 9.975,
+                                'type' => 'RATIO',
+                                'price' => 12.39,
+                            ]
+                        ]
+                    ],
                 ],
                 "taxes" => [
-                    "QTLT" => [
-                        "name" => "QTLT",
-                        "rate" => 3.5,
-                        "type" => "RATIO",
-                        "price" => 23.8,
+                    'QTLT' => [
+                        'name' => 'QTLT',
+                        'rate' => 3.5,
+                        'type' => 'RATIO',
+                        'price' => 28.0,
                     ],
-                    "GST" => [
-                        "name" => "GST",
-                        "rate" => 5,
-                        "type" => "RATIO",
-                        "price" => 35.19,
+                    'GST' => [
+                        'name' => 'GST',
+                        'rate' => 5.0,
+                        'type' => 'RATIO',
+                        'price' => 41.4,
                     ],
-                    "QST" => [
-                        "name" => "QST",
-                        "rate" => 9.975,
-                        "type" => "RATIO",
-                        "price" => 70.20,
+                    'QST' => [
+                        'name' => 'QST',
+                        'rate' => 9.975,
+                        'type' => 'RATIO',
+                        'price' => 82.59
+                    ]
+                ],
+                "discounts" => []
+            ]
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function shouldCalculateTotalWithTaxedFixedTotalWithDiscount()
+    {
+        $Bill = new Bill();
+
+        // add taxes
+        $tax_1 = new TaxForth('3');
+        $tax_2 = new TaxFifth('2');
+        $tax_3 = new TaxSixth('1');
+
+        $this->Biller->addTaxIdentifier($tax_1);
+        $this->Biller->addTaxIdentifier($tax_2);
+        $this->Biller->addTaxIdentifier($tax_3);
+
+        // add discounts
+        $this->buyer->addDiscountsIdentifier($this->discount_1);
+
+        // add Bill resources
+        $Bill->setBuyer($this->buyer);
+        $Bill->setSeller($this->seller);
+        $Bill->setBiller($this->Biller);
+
+        // add items to Bill
+        $item = new InvoiceLineItem(
+            new TaxableInvoiceLineItem(),
+            'Item 1',
+            170,
+            4,
+            "CAD"
+        );
+
+        $item_2 = new InvoiceLineItem(
+            new TaxableInvoiceLineItem(),
+            'Item 2',
+            60,
+            2,
+            "CAD"
+        );
+
+        $Bill->addItem($item);
+        $Bill->addItem($item_2);
+
+        // get all Bill items (result)
+        $items = $Bill->toArray();
+
+        $this->assertEquals(
+            $items,
+            [
+                'sub_total' => 800.0,
+                'total' => 951.99,
+                "items" => [
+                    "Item 1" => [
+                        "label" => "Item 1",
+                        "price" => 170.0,
+                        "quantity" => 4,
+                        "measure" => "CAD",
+                        "type" => "TaxableInvoiceLineItem",
+                        "sub_total" => 680,
+                        "total" => 809.19,
+                        "discount_total" => 0.0,
+                        "taxAmount" => 129.19,
+                        "discounts" => [],
+                        "taxes" => [
+                            [
+                                "name" => "QTLT",
+                                "rate" => 3.5,
+                                "type" => "RATIO",
+                                "price" => 23.8,
+                            ],
+                            [
+                                "name" => "GST",
+                                "rate" => 5,
+                                "type" => "RATIO",
+                                "price" => 35.19,
+                            ],
+                            [
+                                "name" => "QST",
+                                "rate" => 9.975,
+                                "type" => "RATIO",
+                                "price" => 70.20,
+                            ],
+                        ]
                     ],
+                    "Item 2" => [
+                        "label" => "Item 2",
+                        "price" => 60.0,
+                        "quantity" => 2,
+                        "measure" => "CAD",
+                        "type" => "TaxableInvoiceLineItem",
+                        "sub_total" => 120.0,
+                        'total' => 142.8,
+                        'discount_total' => 0.0,
+                        'taxAmount' => 22.8,
+                        "discounts" => [],
+                        "taxes" => [
+                            [
+                                'name' => 'QTLT',
+                                'rate' => 3.5,
+                                'type' => 'RATIO',
+                                'price' => 4.2,
+                            ],
+                            [
+                                'name' => 'GST',
+                                'rate' => 5.0,
+                                'type' => 'RATIO',
+                                'price' => 6.21,
+                            ],
+                            [
+                                'name' => 'QST',
+                                'rate' => 9.975,
+                                'type' => 'RATIO',
+                                'price' => 12.39,
+                            ]
+                        ]
+                    ],
+                ],
+                "taxes" => [
+                    'QTLT' => [
+                        'name' => 'QTLT',
+                        'rate' => 3.5,
+                        'type' => 'RATIO',
+                        'price' => 28.0,
+                    ],
+                    'GST' => [
+                        'name' => 'GST',
+                        'rate' => 5.0,
+                        'type' => 'RATIO',
+                        'price' => 41.4,
+                    ],
+                    'QST' => [
+                        'name' => 'QST',
+                        'rate' => 9.975,
+                        'type' => 'RATIO',
+                        'price' => 82.59
+                    ]
                 ],
                 "discounts" => []
             ]
