@@ -45,8 +45,14 @@ class InvoiceLine
         return round($tax, 2);
     }
 
-    public function getTaxes(?string $key = null): array
+    public function getTaxes($key = null): array
     {
+        if(is_array($key)){
+            return array_filter($this->taxes, function ($item) use ($key){
+               return in_array($item['name'], $key);
+            });
+        }
+
         if(!empty($key) && in_array($key, $this->taxes)){
             return $this->taxes[$key];
         }

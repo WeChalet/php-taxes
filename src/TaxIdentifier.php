@@ -33,12 +33,16 @@ abstract class TaxIdentifier extends Identifier implements TaxInterface
                 return $tax->getTaxIdentifier()->is(TaxAggregationType::TAX_AGGREGATION_TAXED_TOTAL);
             });
 
-        $available_tax_amount = array_reduce($filtered_taxes,function ($acc, InvoiceLineTax $item){
-            return $acc + $item->getTotal();
-        }, 0);
+        $taxes_label = array_map(function (InvoiceLineTax $item) {
+            return $item->getTitle();
+        }, $filtered_taxes);
 
         foreach ($bill->items as $item)
         {
+            $taxes = $item->getTaxes($taxes_label);
+
+            $available_tax_amount = count($taxes) > 0 ? $taxes[0]['price'] : 0;
+
             $taxAmount += $this->applyLine($item, $available_tax_amount);
         }
 
@@ -58,6 +62,10 @@ abstract class TaxIdentifier extends Identifier implements TaxInterface
             return  0;
 
         $tax = $this->apply( $item->getTotal() + $tax );
+
+        ray(
+            $tax
+        );
 
         $item->addTax(
             array_merge(

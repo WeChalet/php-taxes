@@ -37,7 +37,7 @@ class BillTest extends TestCase
 
     public Buyer $buyer;
     public Seller $seller;
-    public Biller $biller;
+    public Biller $Biller;
 
     /**
      * Setup the test environment.
@@ -82,7 +82,7 @@ class BillTest extends TestCase
 
         $this->buyer = new Buyer('Jane Doe', '123 St., San Francisco, CA, 12345', '8764523111');
         $this->seller = new Seller('Jane Doe', '321 St., New York, NY, 31221', '213123121');
-        $this->biller = new Biller('WeChalet Inc', '54321 Blvd Nature, Montreal, QC, H3TE3K', '4187711211');
+        $this->Biller = new Biller('WeChalet Inc', '54321 Blvd Nature, Montreal, QC, H3TE3K', '4187711211');
     }
 
     /**
@@ -90,30 +90,30 @@ class BillTest extends TestCase
      */
     public function shouldCalculateTotalWithTaxDeductible()
     {
-        $bill = new bill();
+        $Bill = new Bill();
 
         // add taxes
-        $this->biller->addTaxIdentifier($this->tax_1);
-        $this->biller->addTaxIdentifier($this->tax_2);
-        $this->biller->addTaxIdentifier($this->tax_3);
+        $this->Biller->addTaxIdentifier($this->tax_1);
+        $this->Biller->addTaxIdentifier($this->tax_2);
+        $this->Biller->addTaxIdentifier($this->tax_3);
 
         // add discounts
         $this->buyer->addDiscountsIdentifier($this->discount_1);
         $this->buyer->addDiscountsIdentifier($this->discount_2);
         $this->buyer->addDiscountsIdentifier($this->discount_3);
 
-        // add bill resources
-        $bill->setBuyer($this->buyer);
-        $bill->setSeller($this->seller);
-        $bill->setBiller($this->biller);
+        // add Bill resources
+        $Bill->setBuyer($this->buyer);
+        $Bill->setSeller($this->seller);
+        $Bill->setBiller($this->Biller);
 
-        // add items to bill
-        $bill->addItem($this->item_1);
-        $bill->addItem($this->item_2);
-        $bill->addItem($this->item_3);
+        // add items to Bill
+        $Bill->addItem($this->item_1);
+        $Bill->addItem($this->item_2);
+        $Bill->addItem($this->item_3);
 
-        // get all bill items (result)
-        $items = $bill->toArray();
+        // get all Bill items (result)
+        $items = $Bill->toArray();
 
         $this->assertEquals(
             $items,
@@ -324,12 +324,12 @@ class BillTest extends TestCase
      */
     public function shouldCalculateTotalWithNoneTaxDeductible()
     {
-        $bill = new bill();
+        $Bill = new Bill();
 
         // add taxes
-        $this->biller->addTaxIdentifier($this->tax_1);
-        $this->biller->addTaxIdentifier($this->tax_2);
-        $this->biller->addTaxIdentifier($this->tax_3);
+        $this->Biller->addTaxIdentifier($this->tax_1);
+        $this->Biller->addTaxIdentifier($this->tax_2);
+        $this->Biller->addTaxIdentifier($this->tax_3);
 
         // make discount as none tax deductible
         $this->discount_1->setNoneTaxDeductibleDiscount();
@@ -341,18 +341,18 @@ class BillTest extends TestCase
         $this->buyer->addDiscountsIdentifier($this->discount_2);
         $this->buyer->addDiscountsIdentifier($this->discount_3);
 
-        // add bill resources
-        $bill->setBuyer($this->buyer);
-        $bill->setSeller($this->seller);
-        $bill->setBiller($this->biller);
+        // add Bill resources
+        $Bill->setBuyer($this->buyer);
+        $Bill->setSeller($this->seller);
+        $Bill->setBiller($this->Biller);
 
-        // add items to bill
-        $bill->addItem($this->item_1);
-        $bill->addItem($this->item_2);
-        $bill->addItem($this->item_3);
+        // add items to Bill
+        $Bill->addItem($this->item_1);
+        $Bill->addItem($this->item_2);
+        $Bill->addItem($this->item_3);
 
-        // get all bill items (result)
-        $items = $bill->toArray();
+        // get all Bill items (result)
+        $items = $Bill->toArray();
 
         $this->assertEquals(
             $items,
@@ -563,12 +563,12 @@ class BillTest extends TestCase
      */
     public function shouldCalculateTotalWithBothNoneTaxDeductibleAndTaxDeductible()
     {
-        $bill = new bill();
+        $Bill = new Bill();
 
         // add taxes
-        $this->biller->addTaxIdentifier($this->tax_1);
-        $this->biller->addTaxIdentifier($this->tax_2);
-        $this->biller->addTaxIdentifier($this->tax_3);
+        $this->Biller->addTaxIdentifier($this->tax_1);
+        $this->Biller->addTaxIdentifier($this->tax_2);
+        $this->Biller->addTaxIdentifier($this->tax_3);
 
         // make discount as none tax deductible
         $this->discount_2->setNoneTaxDeductibleDiscount();
@@ -579,18 +579,18 @@ class BillTest extends TestCase
         $this->buyer->addDiscountsIdentifier($this->discount_2);
         $this->buyer->addDiscountsIdentifier($this->discount_3);
 
-        // add bill resources
-        $bill->setBuyer($this->buyer);
-        $bill->setSeller($this->seller);
-        $bill->setBiller($this->biller);
+        // add Bill resources
+        $Bill->setBuyer($this->buyer);
+        $Bill->setSeller($this->seller);
+        $Bill->setBiller($this->Biller);
 
-        // add items to bill
-        $bill->addItem($this->item_1);
-        $bill->addItem($this->item_2);
-        $bill->addItem($this->item_3);
+        // add items to Bill
+        $Bill->addItem($this->item_1);
+        $Bill->addItem($this->item_2);
+        $Bill->addItem($this->item_3);
 
-        // get all bill items (result)
-        $items = $bill->toArray();
+        // get all Bill items (result)
+        $items = $Bill->toArray();
 
         $this->assertEquals(
             $items,
@@ -801,16 +801,16 @@ class BillTest extends TestCase
      */
     public function shouldCalculateTotalWithNoneTaxDeductibleApplyOn()
     {
-        $bill = new bill();
+        $Bill = new Bill();
 
         // apply discounts on specific items
         $this->tax_1->applyOn(['Pizza hut margherita 8 slices', 'iPhone 13 pro']);
         $this->tax_2->applyOn('VW Golf 8 GTI');
 
         // add taxes
-        $this->biller->addTaxIdentifier($this->tax_1);
-        $this->biller->addTaxIdentifier($this->tax_2);
-        $this->biller->addTaxIdentifier($this->tax_3);
+        $this->Biller->addTaxIdentifier($this->tax_1);
+        $this->Biller->addTaxIdentifier($this->tax_2);
+        $this->Biller->addTaxIdentifier($this->tax_3);
 
         // make discount as none tax deductible
         $this->discount_2->setNoneTaxDeductibleDiscount();
@@ -819,18 +819,18 @@ class BillTest extends TestCase
         // add discounts
         $this->buyer->addDiscountsIdentifier($this->discount_2);
 
-        // add bill resources
-        $bill->setBuyer($this->buyer);
-        $bill->setSeller($this->seller);
-        $bill->setBiller($this->biller);
+        // add Bill resources
+        $Bill->setBuyer($this->buyer);
+        $Bill->setSeller($this->seller);
+        $Bill->setBiller($this->Biller);
 
-        // add items to bill
-        $bill->addItem($this->item_1);
-        $bill->addItem($this->item_2);
-        $bill->addItem($this->item_3);
+        // add items to Bill
+        $Bill->addItem($this->item_1);
+        $Bill->addItem($this->item_2);
+        $Bill->addItem($this->item_3);
 
-        // get all bill items (result)
-        $items = $bill->toArray();
+        // get all Bill items (result)
+        $items = $Bill->toArray();
 
         $this->assertEquals(
             $items,
@@ -961,24 +961,24 @@ class BillTest extends TestCase
      */
     public function shouldCalculateTotalWithTaxedFixedTotal()
     {
-        $bill = new bill();
+        $Bill = new Bill();
 
         $this->tax_1->setTaxAggregated();
         // add taxes
-        $this->biller->addTaxIdentifier($this->tax_1);
-        $this->biller->addTaxIdentifier($this->tax_2);
-        $this->biller->addTaxIdentifier($this->tax_3);
+        $this->Biller->addTaxIdentifier($this->tax_1);
+        $this->Biller->addTaxIdentifier($this->tax_2);
+        $this->Biller->addTaxIdentifier($this->tax_3);
 
-        // add bill resources
-        $bill->setBuyer($this->buyer);
-        $bill->setSeller($this->seller);
-        $bill->setBiller($this->biller);
+        // add Bill resources
+        $Bill->setBuyer($this->buyer);
+        $Bill->setSeller($this->seller);
+        $Bill->setBiller($this->Biller);
 
-        // add items to bill
-        $bill->addItem($this->item_1);
+        // add items to Bill
+        $Bill->addItem($this->item_1);
 
-        // get all bill items (result)
-        $items = $bill->toArray();
+        // get all Bill items (result)
+        $items = $Bill->toArray();
 
         $this->assertEquals(
             $items,
@@ -1049,24 +1049,23 @@ class BillTest extends TestCase
      */
     public function shouldCalculateTotalWithTaxedFixedTotalSecond()
     {
-        $bill = new bill();
+        $Bill = new Bill();
 
-        $this->tax_2->setTaxAggregated();
         // add taxes
         $tax_1 = new TaxForth('3');
         $tax_2 = new TaxFifth('2');
         $tax_3 = new TaxSixth('1');
 
-        $this->biller->addTaxIdentifier($tax_1);
-        $this->biller->addTaxIdentifier($tax_2);
-        $this->biller->addTaxIdentifier($tax_3);
+        $this->Biller->addTaxIdentifier($tax_1);
+        $this->Biller->addTaxIdentifier($tax_2);
+        $this->Biller->addTaxIdentifier($tax_3);
 
-        // add bill resources
-        $bill->setBuyer($this->buyer);
-        $bill->setSeller($this->seller);
-        $bill->setBiller($this->biller);
+        // add Bill resources
+        $Bill->setBuyer($this->buyer);
+        $Bill->setSeller($this->seller);
+        $Bill->setBiller($this->Biller);
 
-        // add items to bill
+        // add items to Bill
         $item = new InvoiceLineItem(
             new TaxableInvoiceLineItem(),
             'Item 1',
@@ -1075,10 +1074,19 @@ class BillTest extends TestCase
             "CAD"
         );
 
-        $bill->addItem($item);
+        $item_2 = new InvoiceLineItem(
+            new TaxableInvoiceLineItem(),
+            'Item 2',
+            60,
+            2,
+            "CAD"
+        );
 
-        // get all bill items (result)
-        $items = $bill->toArray();
+        $Bill->addItem($item);
+        //$Bill->addItem($item_2);
+
+        // get all Bill items (result)
+        $items = $Bill->toArray();
 
         $this->assertEquals(
             $items,

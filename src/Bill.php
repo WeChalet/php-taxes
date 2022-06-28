@@ -29,8 +29,8 @@ class Bill
 
     public function getTotal(): float
     {
-        $taxes = [];
-        $discounts = [];
+        $this->taxes = [];
+        $this->discounts = [];
         $total = $this->getSubTotal();
 
         foreach ($this->biller->getTaxIdentifiers() as $taxIdentifier) {
