@@ -19,7 +19,7 @@ abstract class DiscountIdentifier extends Identifier implements DiscountInterfac
         $this->rate = !empty($rate) ? $rate : $this->rate;
         $this->type = !empty($type) ? $type : $this->type;
 
-        if (empty($this->rate))
+        if (is_null($this->rate))
             throw new InvalidTaxRate();
     }
 
